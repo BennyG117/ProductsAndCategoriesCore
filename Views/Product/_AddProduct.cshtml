@@ -1,0 +1,35 @@
+@* Add a Product Partial *@
+
+@model Product
+
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <h1>Add Product</h1>
+    <hr class="w-75"/>
+
+    <form asp-action="NewProduct" asp-controller="Product" method="post" class="shadow p-3 rounded d-flex flex-column p-2 justify-content-center w-100">
+        <div class="d-flex">
+
+            <div class="d-flex">
+            @* Column 2 - section *@
+                <div class="mb-3 w-100 me-2 text-center">
+                    <label asp-for="ProductId"></label>
+                    <select asp-for="ProductId"  class="form-control" name="ProductId">
+                        <option value="">Select a Product</option>
+                        @foreach (Product product in ViewBag.AllProducts)
+                        {
+                        <option value="@product.ProductId">@product.ProductName </option>
+                        }
+                    </select>
+                    <span asp-validation-for="ProductId" class="text-danger font-weight-bold"></span>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <div class="text-end me-5"><button class="btn btn-outline-dark shadow">Add </button>
+        </div>
+    </form>
+
+
+</div>

@@ -1,0 +1,21 @@
+@* CREATING A PARTIAL for Target Product *@
+
+@model MyViewModel
+
+<div class="container">
+<div>
+    <a asp-controller="Product" asp-action="CombinedProductHome">Products</a>
+    <P>|</P>
+    <a asp-controller="Category" asp-action="CombinedCategoryHome">Categories</a>
+</div>
+
+    <h1 value="@Product.ProductId">@Product.ProductName</h1>
+    <div class="row mt-5">
+        <div class="col-md">
+            @await Html.PartialAsync("_BasicCategoryList")
+        </div>
+        <div class="col-md">
+            @await Html.PartialAsync("_AddCategory")
+        </div>
+    </div>
+</div>

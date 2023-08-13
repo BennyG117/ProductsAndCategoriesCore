@@ -1,0 +1,21 @@
+@* CREATING A PARTIAL for Category Home *@
+
+@model MyViewModel
+
+<div class="container">
+
+<div>
+    <a asp-controller="Product" asp-action="CombinedProductHome">Products</a>
+    <P>|</P>
+    <a asp-controller="Category" asp-action="CombinedCategoryHome">Categories</a>
+</div>
+
+    <div class="row mt-5">
+        <div class="col-md">
+            @await Html.PartialAsync("_NewCategory")
+        </div>
+        <div class="col-md">
+            @await Html.PartialAsync("_CategoryList")
+        </div>
+    </div>
+</div>

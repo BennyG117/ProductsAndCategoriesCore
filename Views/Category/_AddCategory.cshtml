@@ -1,0 +1,35 @@
+@* Add a Category Partial *@
+
+@model Category
+
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <h1>Add Category</h1>
+    <hr class="w-75"/>
+
+    <form asp-action="NewCategory" asp-controller="Category" method="post" class="shadow p-3 rounded d-flex flex-column p-2 justify-content-center w-100">
+        <div class="d-flex">
+
+            <div class="d-flex">
+            @* Column 2 - section *@
+                <div class="mb-3 w-100 me-2 text-center">
+                    <label asp-for="CategoryId"></label>
+                    <select asp-for="CategoryId"  class="form-control" name="CategoryId">
+                        <option value="">Select a Category</option>
+                        @foreach (Category category in ViewBag.AllCategories)
+                        {
+                        <option value="@category.CategoryId">@category.CategoryName </option>
+                        }
+                    </select>
+                    <span asp-validation-for="ChefId" class="text-danger font-weight-bold"></span>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <div class="text-end me-5"><button class="btn btn-outline-dark shadow">Add </button>
+        </div>
+    </form>
+
+
+</div>

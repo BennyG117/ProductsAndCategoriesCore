@@ -1,8 +1,22 @@
-@* WORK IN PROGRESS ---- COMINING GET ALL PRODUCTS AND CREATE PRODUCT *@
+@* WORK IN PROGRESS ---- Combining GET ALL PRODUCTS AND CREATE PRODUCT *@
 
 @model MyViewModel
-<div class="d-flex">
-    @await Html.PartialAsync("_ProductList")
-    @await Html.PartialAsync("_NewProduct")
+
+<div class="container">
+    
+<div>
+    <a asp-controller="Product" asp-action="CombinedProductHome">Products</a>
+    <P>|</P>
+    <a asp-controller="Category" asp-action="CombinedCategoryHome">Categories</a>
 </div>
+
+    <div class="row mt-5">
+        <div class="col-md">
+            @await Html.PartialAsync("_NewProduct")
+        </div>
+        <div class="col-md">
+            @await Html.PartialAsync("_ProductList")
+        </div>
+    </div>
+
 

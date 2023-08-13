@@ -1,0 +1,39 @@
+@model Product
+    
+
+    @* NEW PRODUCT PARTIAL *@
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <h1>New Product</h1>
+    <hr class="w-75"/>
+
+<form asp-action="CreateProduct" asp-controller="Product" method="post" class="shadow p-3 rounded d-flex p-2 justify-content-center w-50">
+    <div class="w-100 me-2 text-start">
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="ProductName">Name</label>
+            <input asp-for="ProductName" type="text" class="form-control" placeholder="Product name here..."/>
+            <span asp-validation-for="ProductName" class="text-danger font-weight-bold"></span>
+        </div>
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="ProductDescription">Last Name</label>
+            <input asp-for="ProductDescription" type="textarea" class="form-control" placeholder="Product Description here..."/>
+            <span asp-validation-for="ProductDescription" class="text-danger font-weight-bold"></span>
+        </div>
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="ProductPrice"></label>
+            <input asp-for="ProductPrice" type="number" class="form-control" />
+            <span asp-validation-for="ProductPrice" class="text-danger font-weight-bold"></span>
+        </div>
+                <div class="text-start"><button class="btn btn-outline-dark shadow">Create</button></div>
+
+    </div>
+
+
+</form>
+
+
+
+</div>

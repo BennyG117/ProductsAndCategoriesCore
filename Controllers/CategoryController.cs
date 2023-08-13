@@ -36,20 +36,23 @@ public IActionResult CombinedCategoryHome()
 {   
     MyViewModel MyModels = new MyViewModel
     {
-        AllCategories = _context.Categories.ToList()
+        AllCategories = MyContext.AllCategories()
+        CreateCategory = MyContext.CreateCategory()
     };     
     return View("CombinedCategoryHome",MyModels);    
 }
 //! =======================================================================
 //! Target Category - MyViewModel for target category (Combines basic Products list that connects to target category & Add a Product form)
-//TODO: nested loop needed
+//TODO: Need a method that adds a selected product to a category that I'm viewing
 
 [HttpGet("/target/{categoryId}")]    
 public IActionResult TargetCetegory()    
 {   
     MyViewModel MyModels = new MyViewModel
     {
-        AllCategories = _context.Categories.ToList()
+        ViewCategory = MyContext.ViewCategory()
+        AllProducts = MyContext.AllProducts()
+        AddProductToCategory = MyContext.AddProductToCategory()
     };     
     return View("TargetCategory",MyModels);    
 }
@@ -60,48 +63,47 @@ public IActionResult TargetCetegory()
     public IActionResult AllCategories()
     {
         List<Category> allCategories = db.Categories.Include(p => p.AssociationLinksProducts).OrderByDescending(d => d.CreatedAt).ToList();
-        return View("CombinedProductHome", allProducts);
+        return View("CombinedCategoryHome", allCategories);
     }
 
 
-    // New Product  ============================================
-    [HttpGet("products/new")]
-    public IActionResult NewProduct()
+    // New Category  ============================================
+    [HttpGet("categories/new")]
+    public IActionResult NewCategory()
     {
-        return View("CombinedProductHome");
+        return View("CombinedCategoryHome");
     }
 
 
 
-    // CreateProduct method ============================================
-    [HttpPost("product/create")]
-    public IActionResult CreateProduct(Product newProduct)
+    // CreateCategory method ============================================
+    [HttpPost("category/create")]
+    public IActionResult CreateCategory(Category newCategory)
     {
         if (!ModelState.IsValid)
         {
-            ViewBag.allProducts = db.Products.ToList();
-            return View("NewProduct");
+            ViewBag.allCategories = db.Categories.ToList();
+            return View("_NewCategory");
         }
-        // newDish.DishId = (int) HttpContext.Session.GetInt32("UUID");
-        // using db table name "Dishes"
-        db.Products.Add(newProduct);
+
+        db.Categories.Add(newCategory);
         db.SaveChanges();
-        return RedirectToAction("CombinedProductHome");
+        return RedirectToAction("CombinedCategoryHome");
     }
 
 
-    // view one Product method ============================================
-    [HttpGet("product/viewone/{productId}")]
-    public IActionResult ViewProduct(int productId)
+    // view one Category method ============================================
+    [HttpGet("category/viewone/{categoryId}")]
+    public IActionResult ViewCategory(int categoryId)
     {
         //Query below:
-        Product? product = db.Products.FirstOrDefault(product => product.ProductId == productId);
+        Category? category = db.Categories.FirstOrDefault(category => category.CategoryId == categoryId);
 
-        if(product == null) 
+        if(category == null) 
         {
-            return RedirectToAction("TargetProduct");
+            return RedirectToAction("TargetCategory");
         }
-        return View("TargetProduct", product );
+        return View("TargetCategory", category );
     }
 
 

@@ -36,20 +36,23 @@ public IActionResult CombinedProductHome()
 {   
     MyViewModel MyModels = new MyViewModel
     {
-        AllProducts = _context.Products.ToList()
+        AllProducts = MyContext.AllProducts()
+        CreateProduct = MyContext.CreateProduct()
     };     
     return View("CombinedProductHome",MyModels);    
 }
 //! =======================================================================
 //! Target Product - MyViewModel for target product (Combines basic categories list that connects to target product & Add a Category form)
-//TODO: nested loop needed
+//TODO: Need a method that adds a selected category to a product that I'm viewing
 
 [HttpGet("/target/{productId}")]    
 public IActionResult TargetProduct()    
 {   
     MyViewModel MyModels = new MyViewModel
     {
-        AllProducts = _context.Products.ToList()
+        ViewProduct = MyContext.ViewProduct()
+        AllCategories = MyContext.AllCategories()
+        AddCategoryToProduct = MyContext.AddCategoryToProduct()
     };     
     return View("TargetProduct",MyModels);    
 }
@@ -80,7 +83,7 @@ public IActionResult TargetProduct()
         if (!ModelState.IsValid)
         {
             ViewBag.allProducts = db.Products.ToList();
-            return View("NewProduct");
+            return View("_NewProduct");
         }
         // newDish.DishId = (int) HttpContext.Session.GetInt32("UUID");
         // using db table name "Dishes"

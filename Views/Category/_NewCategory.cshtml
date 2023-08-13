@@ -1,0 +1,27 @@
+@model Category
+    
+
+    @* NEW PRODUCT PARTIAL *@
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <h1>New Category</h1>
+    <hr class="w-75"/>
+
+<form asp-action="CreateCategory" asp-controller="Category" method="post" class="shadow p-3 rounded d-flex p-2 justify-content-center w-50">
+    <div class="w-100 me-2 text-start">
+        @* section *@
+        <div class="mb-3">
+            <label asp-for="CategoryName">Name</label>
+            <input asp-for="CategoryName" type="text" class="form-control" placeholder="Category name here..."/>
+            <span asp-validation-for="CategoryName" class="text-danger font-weight-bold"></span>
+        </div>
+        <div class="text-start"><button class="btn btn-outline-dark shadow">Create</button></div>
+
+    </div>
+
+
+</form>
+
+
+
+</div>
