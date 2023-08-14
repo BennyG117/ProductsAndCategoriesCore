@@ -17,7 +17,7 @@ public class CategoryController : Controller
 {
     private readonly ILogger<CategoryController> _logger;
 
-    // Add field - adding context into our class // "db" can eb any name
+    // Add field - adding context into our class // "db" can be any name
     private MyContext db;
 
     // update below adding context, etc
@@ -30,6 +30,7 @@ public class CategoryController : Controller
 
 //! =======================================================================
 //! Categories - MyViewModel for Categories (Combines get all categories & New categories)
+//Goal: to use two partials to create a home page that displays a form to add a new category to the db and a form to view all categories in the list. This list of all categories will be a list of clickable links
 
 [HttpGet("/combined/category/home")]    
 public IActionResult CombinedCategoryHome()    
@@ -43,7 +44,8 @@ public IActionResult CombinedCategoryHome()
 }
 //! =======================================================================
 //! Target Category - MyViewModel for target category (Combines basic Products list that connects to target category & Add a Product form)
-//TODO: Need a method that adds a selected product to a category that I'm viewing
+//Goal:to use two partials to create a view page called "TargetCategory.cshtml". This page will have the target category listed at the top, then two partials below it. One part will have a list of all the products that pertain to that target category, while the other will have dropdown select form to add other products to the list of linked products to the category at the top of the page.
+
 
 [HttpGet("/target/{categoryId}")]    
 public IActionResult TargetCetegory()    
@@ -57,7 +59,7 @@ public IActionResult TargetCetegory()
     return View("TargetCategory",MyModels);    
 }
 //! =======================================================================
-//TODO: REMINDER TO COMPLETE CONTROLLER.....
+
     //  Categories/gets all categories * ============================================
     [HttpGet("/categories")]
     public IActionResult AllCategories()

@@ -1,0 +1,21 @@
+@* All Products Partial *@
+@* Goal: to show a clickable list of all products. When clicked they will take the user to the view page "TargetProduct.cshtml" *@
+
+@model List<Product>
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <h1>All Products</h1>
+    <hr class="w-75"/>
+    <ul>
+    @foreach (Product product in Model )
+    {
+        <li>
+            <a asp-controller="Product" asp-action="TargetProduct" asp-route-productId="@product.ProductId">
+                @product.ProductName
+            </a>
+        </li>
+    }
+    </ul>
+</div>
+
+

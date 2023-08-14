@@ -1,0 +1,21 @@
+@* All Categories Partial *@
+@* Goal: to show a clickable list of all categories. When clicked they will take the user to the view page "TargetCategory.cshtml" *@
+
+@model List<Category>
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <h1>All Categories</h1>
+    <hr class="w-75"/>
+    <ul>
+    @foreach (Category category in Model )
+    {
+        <li>
+            <a asp-controller="Category" asp-action="TargetCategory" asp-route-categoryId="@category.CategoryId">
+                @category.CategoryName
+            </a>
+        </li>
+    }
+    </ul>
+</div>
+
+

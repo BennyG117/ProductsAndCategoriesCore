@@ -1,0 +1,17 @@
+@* Basic Product List - Partial - lists products relating to target category *@
+@* Goal: to show all products that pertain to the target Category being displayed *@
+
+@model List<MyViewmodel>
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <h1>Products</h1>
+    <hr class="w-75"/>
+    <ul>
+    @foreach (Product product in Model )
+    {
+        <li>
+                @product.ProductName.ProductId
+        </li>
+    }
+    </ul>
+</div>
