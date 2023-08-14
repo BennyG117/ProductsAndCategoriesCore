@@ -10,13 +10,13 @@
     <a asp-controller="Category" asp-action="CombinedCategoryHome">Categories</a>
 </div>
 
-    <h1 value="@Product.ProductId">@Product.ProductName</h1>
+    <h1 value="@Model.Product.ProductId">@Model.Product.ProductName</h1>
     <div class="row mt-5">
         <div class="col-md">
-            @await Html.PartialAsync("_BasicCategoryList")
+            @await Html.PartialAsync("_BasicCategoryList", Model.SingleProduct)
         </div>
         <div class="col-md">
-            @await Html.PartialAsync("_AddCategory")
+            @await Html.PartialAsync("_AddCategory", Model)
         </div>
     </div>
 </div>

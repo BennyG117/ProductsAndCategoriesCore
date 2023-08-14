@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 //ADDED for session check
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ProductsAndCategoriesCore.Controllers;
 
@@ -28,8 +29,8 @@ public class CategoryController : Controller
     }
 
 
-//! =======================================================================
-//! Categories - MyViewModel for Categories (Combines get all categories & New categories)
+// =======================================================================
+// Categories - MyViewModel for Categories (Combines get all categories & New categories)
 //Goal: to use two partials to create a home page that displays a form to add a new category to the db and a form to view all categories in the list. This list of all categories will be a list of clickable links
 
 [HttpGet("/combined/category/home")]    
@@ -37,28 +38,53 @@ public IActionResult CombinedCategoryHome()
 {   
     MyViewModel MyModels = new MyViewModel
     {
-        AllCategories = MyContext.AllCategories()
-        CreateCategory = MyContext.CreateCategory()
+        AllCategories = db.Categories.ToList()
     };     
     return View("CombinedCategoryHome",MyModels);    
 }
-//! =======================================================================
-//! Target Category - MyViewModel for target category (Combines basic Products list that connects to target category & Add a Product form)
-//Goal:to use two partials to create a view page called "TargetCategory.cshtml". This page will have the target category listed at the top, then two partials below it. One part will have a list of all the products that pertain to that target category, while the other will have dropdown select form to add other products to the list of linked products to the category at the top of the page.
+// =======================================================================
+// Target Category - MyViewModel for target category (Combines basic Products list that connects to target category & Add a Product form)
+//use two partials to create a view page called "TargetCategory.cshtml". This page will have the target category listed at the top, then two partials below it. One part will have a list of all the products that pertain to that target category, while the other will have dropdown select form to add other products to the list of linked products to the category at the top of the page.
 
 
 [HttpGet("/target/{categoryId}")]    
-public IActionResult TargetCetegory()    
+public IActionResult TargetCategory(int categoryId)    
 {   
-    MyViewModel MyModels = new MyViewModel
+    List<Product> allProducts = db.Products.ToList();
+
+    Category? SingleCategory = db.Categories.Include(c => c.AssociationLinksProducts).ThenInclude(a => a.Product).FirstOrDefault(category => category.CategoryId == categoryId);
+
+
+    if (SingleCategory == null)
     {
-        ViewCategory = MyContext.ViewCategory()
-        AllProducts = MyContext.AllProducts()
-        AddProductToCategory = MyContext.AddProductToCategory()
-    };     
-    return View("TargetCategory",MyModels);    
+        return NotFound();
+    }
+
+    List<Product> linkedProducts = SingleCategory.AssociationLinksProducts.Select(p => p.Product).ToList();
+    List<Product> unlinkedProducts = allProducts.Except(linkedProducts).ToList();
+
+    return View("TargetCatergory", new MyViewModel()
+    {
+        Category = SingleCategory,
+        SingleCategory = linkedProducts,
+        unlinkedProducts = unlinkedProducts
+    });
+
+    // List<Product> SelectLinkedProduct = allProducts.Except(SingleCategory.AssociationLinksProducts).ToList();
+
+    // MyViewModel MyModels = new MyViewModel
+    // {
+        
+
+    //     List<FilteredCategories> AllCategories = db.Include(p => p.AssociationLinksProducts)
+
+    //     ViewCategory = db.ViewCategory(),
+    //     AllProducts = db.AllProducts(),
+    //     AddProductToCategory = db.AddProductToCategory(),
+    // };     
+    // return View("TargetCategory",MyModels);    
 }
-//! =======================================================================
+//=======================================================================
 
     //  Categories/gets all categories * ============================================
     [HttpGet("/categories")]
@@ -108,6 +134,20 @@ public IActionResult TargetCetegory()
         return View("TargetCategory", category );
     }
 
+    // Add Association Category method ============================================
+    [HttpPost("category/add/association")]
+    public IActionResult NewCategoryAssociation(Association newAssociation)
+    {
+        // if (!ModelState.IsValid)
+        // {
+        //     ViewBag.allCategories = db.Categories.ToList();
+        //     return View("_NewCategory");
+        // }
+
+        db.Associations.Add(newAssociation);
+        db.SaveChanges();
+        return RedirectToAction("ViewCategory", new{id = newAssociation.CategoryId});
+    }
 
 }
 

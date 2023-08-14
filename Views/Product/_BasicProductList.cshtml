@@ -1,7 +1,7 @@
 @* Basic Product List - Partial - lists products relating to target category *@
 @* Goal: to show all products that pertain to the target Category being displayed *@
 
-@model List<MyViewmodel>
+@model List<Product>
 
 <div class="d-flex flex-column justify-content-center align-items-center">
     <h1>Products</h1>
@@ -10,7 +10,7 @@
     @foreach (Product product in Model )
     {
         <li>
-                @product.ProductName.ProductId
+                @product.ProductName
         </li>
     }
     </ul>

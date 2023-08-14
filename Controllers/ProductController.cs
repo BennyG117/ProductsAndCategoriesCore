@@ -28,37 +28,49 @@ public class ProductController : Controller
     }
 
 
-//! =======================================================================
-//! Products - MyViewModel for Produtcs (Combines get all products & New Product)
-//Goal: to use two partials to create a secondary home page that displays a form to add a new product to the db and a form to view all products in the list. This list of all products will be a list of clickable links
+// =======================================================================
+// Products - MyViewModel for Produtcs (Combines get all products & New Product)
+//Need to  use two partials to create a secondary home page that displays a form to add a new product to the db and a form to view all products in the list. This list of all products will be a list of clickable links
 
 [HttpGet("/combined/product/home")]    
 public IActionResult CombinedProductHome()    
 {   
     MyViewModel MyModels = new MyViewModel
     {
-        AllProducts = MyContext.AllProducts()
-        CreateProduct = MyContext.CreateProduct()
+        AllProducts = db.Products.ToList()
+
     };     
     return View("CombinedProductHome",MyModels);    
 }
-//! =======================================================================
-//! Target Product - MyViewModel for target product (Combines basic categories list that connects to target product & Add a Category form)
-//Goal:to use two partials to create a view page called "TargetProduct.cshtml". This page will have the target Product listed at the top, then two partials below it. One part will have a list of all the categories that pertain to that target Product, while the other will have dropdown select form to add other categories to the list of linked products to the Product at the top of the page.
+// =======================================================================
+// Target Product - MyViewModel for target product (Combines basic categories list that connects to target product & Add a Category form)
+//Need to use two partials to create a view page called "TargetProduct.cshtml". This page will have the target Product listed at the top, then two partials below it. One part will have a list of all the categories that pertain to that target Product, while the other will have dropdown select form to add other categories to the list of linked products to the Product at the top of the page.
 
 
 [HttpGet("/target/{productId}")]    
-public IActionResult TargetProduct()    
+public IActionResult TargetProduct(int productId)    
 {   
-    MyViewModel MyModels = new MyViewModel
+    List<Category> allCategories = db.Categories.ToList();
+
+    Product? SingleProduct = db.Products.Include(c => c.AssociationLinksCategories).ThenInclude(c => c.Category).FirstOrDefault(p => p.ProductId == productId);
+
+
+    if (SingleProduct == null)
     {
-        ViewProduct = MyContext.ViewProduct()
-        AllCategories = MyContext.AllCategories()
-        AddCategoryToProduct = MyContext.AddCategoryToProduct()
-    };     
-    return View("TargetProduct",MyModels);    
+        return NotFound();
+    }
+
+    List<Category> linkedCategories = SingleProduct.AssociationLinksCategories.Select(c => c.Category).ToList();
+    List<Category> unlinkedCategories = allCategories.Except(linkedCategories).ToList();
+
+    return View("TargetProduct", new MyViewModel()
+    {
+        Product = SingleProduct,
+        SingleProduct = linkedCategories,
+        unlinkedCategories = unlinkedCategories
+    });
 }
-//! =======================================================================
+// =======================================================================
 
     //  Products/gets all products * ============================================
     [HttpGet("/products")]
@@ -109,6 +121,14 @@ public IActionResult TargetProduct()
         return View("TargetProduct", product );
     }
 
+    //Add Association ===========================
+    [HttpPost("product/add/association")]
+    public IActionResult NewProductAssociation(Association newAssociation)
+    {
 
+        db.Associations.Add(newAssociation);
+        db.SaveChanges();
+        return RedirectToAction("ViewProduct", new{id = newAssociation.ProductId});
+    }
 }
 
